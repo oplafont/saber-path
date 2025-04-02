@@ -1,103 +1,146 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import React, { useState } from 'react';
+
+const QUESTIONS = [
+  {
+    id: 1,
+    prompt: "You’re in a heated standoff. A decision must be made.",
+    options: [
+      "Strike first—power and momentum win battles.",
+      "Observe, wait, and react with precision when the time is right.",
+      "Talk them down—violence is the last resort.",
+      "Distract them with wit or surprise, then exploit the opening."
+    ]
+  },
+  {
+    id: 2,
+    prompt: "You feel an overwhelming surge of emotion—grief, rage, or love. What do you do?",
+    options: [
+      "Channel it into strength—it’s fuel for my fire.",
+      "Acknowledge it but stay in control—emotion must serve me, not rule me.",
+      "Bury it and stay composed—it has no place in the moment.",
+      "Follow where it leads—it’s a compass, not a curse."
+    ]
+  },
+  {
+    id: 3,
+    prompt: "You’ve been chosen to lead a squad into a dangerous mission. How do you approach it?",
+    options: [
+      "I lead from the front—I won’t ask what I won’t do myself.",
+      "I delegate based on strength—I trust my people to do their jobs.",
+      "I work behind the scenes—guiding without being the focus.",
+      "I challenge the mission entirely—is this really the right move?"
+    ]
+  },
+  {
+    id: 4,
+    prompt: "You stumble upon a forbidden Force technique said to be dangerous and powerful.",
+    options: [
+      "I test it—knowledge is meant to be wielded.",
+      "I study it, but keep it secret—some truths are too unstable.",
+      "I destroy it—there are some paths that shouldn't be walked.",
+      "I bring it to others—we need to face it together."
+    ]
+  },
+  {
+    id: 5,
+    prompt: "You’re face-to-face with a rival who once betrayed you. You’ve won. What now?",
+    options: [
+      "End them—this is justice.",
+      "Let them live, but never trust them again.",
+      "Seek understanding—what really caused the betrayal?",
+      "Walk away—this fight doesn’t define me anymore."
+    ]
+  }
+];
+
+export default function JediQuiz() {
+  const [responses, setResponses] = useState(
+    QUESTIONS.map(() => Array(3).fill(''))
+  );
+
+  const handleChange = (qIndex: number, rank: number, value: string) => {
+    const updated = [...responses];
+    updated[qIndex][rank] = value;
+    setResponses(updated);
+  };
+
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState('');
+  
+  const handleSubmit = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch('/api/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ answers: responses })
+      });
+  
+      const data = await res.json();
+      setResult(data.result);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      setResult('Failed to generate Jedi profile. Try again later.');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="p-6 space-y-8 max-w-3xl mx-auto">
+      <h1 className="text-3xl font-bold text-center mb-4">Path of the Saber</h1>
+      {QUESTIONS.map((q, qIndex) => (
+        <div key={q.id} className="border rounded-lg p-4 space-y-4 shadow">
+          <h2 className="text-xl font-semibold">Question {q.id}</h2>
+          <p>{q.prompt}</p>
+          {[0, 1, 2].map((rank) => (
+            <div key={rank}>
+              <label className="block text-sm font-medium mb-1">
+                {rank + 1} – Rank #{rank + 1} choice
+              </label>
+              <select
+                className="w-full p-2 rounded border"
+                value={responses[qIndex][rank]}
+                onChange={(e) => handleChange(qIndex, rank, e.target.value)}
+              >
+                <option value="">Select an option</option>
+                {q.options.map((opt, i) => (
+                  <option key={i} value={opt} disabled={responses[qIndex].includes(opt)}>
+                    {opt}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      ))}
+
+      <div className="text-center">
+        <button
+          onClick={handleSubmit}
+          className="mt-6 px-6 py-3 text-lg font-semibold bg-black text-white rounded hover:bg-gray-800"
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          Reveal My Saber Path
+        </button>
+        {loading && (
+  <p className="text-center mt-4 text-lg font-medium text-yellow-500">
+    Reading the Flow… Forging your legacy...
+  </p>
+)}
+
+{result && (
+  <div className="mt-10 border p-6 rounded bg-black text-white space-y-4">
+    <h2 className="text-2xl font-bold text-center text-lime-400">Your Jedi Profile</h2>
+    <pre className="whitespace-pre-wrap text-lg">{result}</pre>
+  </div>
+)}
+
+      </div>
     </div>
   );
 }
