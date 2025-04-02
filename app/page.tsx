@@ -1,117 +1,119 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from "react";
 
-const QUESTIONS = [
-  {
-    id: 1,
-    prompt: "You’re in a heated standoff. A decision must be made.",
-    options: [
-      "Strike first—power and momentum win battles.",
-      "Observe, wait, and react with precision when the time is right.",
-      "Talk them down—violence is the last resort.",
-      "Distract them with wit or surprise, then exploit the opening."
-    ]
-  },
-  {
-    id: 2,
-    prompt: "You feel an overwhelming surge of emotion—grief, rage, or love. What do you do?",
-    options: [
-      "Channel it into strength—it’s fuel for my fire.",
-      "Acknowledge it but stay in control—emotion must serve me, not rule me.",
-      "Bury it and stay composed—it has no place in the moment.",
-      "Follow where it leads—it’s a compass, not a curse."
-    ]
-  },
-  {
-    id: 3,
-    prompt: "You’ve been chosen to lead a squad into a dangerous mission. How do you approach it?",
-    options: [
-      "I lead from the front—I won’t ask what I won’t do myself.",
-      "I delegate based on strength—I trust my people to do their jobs.",
-      "I work behind the scenes—guiding without being the focus.",
-      "I challenge the mission entirely—is this really the right move?"
-    ]
-  },
-  {
-    id: 4,
-    prompt: "You stumble upon a forbidden Force technique said to be dangerous and powerful.",
-    options: [
-      "I test it—knowledge is meant to be wielded.",
-      "I study it, but keep it secret—some truths are too unstable.",
-      "I destroy it—there are some paths that shouldn't be walked.",
-      "I bring it to others—we need to face it together."
-    ]
-  },
-  {
-    id: 5,
-    prompt: "You’re face-to-face with a rival who once betrayed you. You’ve won. What now?",
-    options: [
-      "End them—this is justice.",
-      "Let them live, but never trust them again.",
-      "Seek understanding—what really caused the betrayal?",
-      "Walk away—this fight doesn’t define me anymore."
-    ]
-  }
-];
-
-export default function JediQuiz() {
-  const [responses, setResponses] = useState(
-    QUESTIONS.map(() => Array(3).fill(''))
+export default function HomePage() {
+  const [answers, setAnswers] = useState<string[][]>(
+    Array(5).fill(["", "", ""])
   );
+  const [jediName, setJediName] = useState("");
+  const [result, setResult] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (qIndex: number, rank: number, value: string) => {
-    const updated = [...responses];
-    updated[qIndex][rank] = value;
-    setResponses(updated);
+  const handleRankChange = (
+    questionIndex: number,
+    rankIndex: number,
+    value: string
+  ) => {
+    const newAnswers = [...answers];
+    newAnswers[questionIndex][rankIndex] = value;
+    setAnswers(newAnswers);
   };
 
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState('');
-  
   const handleSubmit = async () => {
     setLoading(true);
+    setResult("");
     try {
-      const res = await fetch('/api/generate', {
-        method: 'POST',
+      const response = await fetch("/api/generate", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ answers: responses })
+        body: JSON.stringify({ answers, name: jediName }),
       });
-  
-      const data = await res.json();
-      setResult(data.result);
+
+      const data = await response.json();
+      if (response.ok) {
+        setResult(data.result);
+      } else {
+        setResult("Failed to generate Jedi profile. Try again later.");
+      }
     } catch (error) {
-      console.error('Error fetching profile:', error);
-      setResult('Failed to generate Jedi profile. Try again later.');
+      setResult("An error occurred. Try again later.");
     } finally {
       setLoading(false);
     }
   };
-  
+
+  const questions = [
+    [
+      "Strike first—power and momentum win battles.",
+      "Observe, wait, and react with precision when the time is right.",
+      "Talk them down—violence is the last resort.",
+      "Distract them with wit or surprise, then exploit the opening.",
+    ],
+    [
+      "Channel it into strength—it’s fuel for my fire.",
+      "Acknowledge it but stay in control—emotion must serve me, not rule me.",
+      "Bury it and stay composed—it has no place in the moment.",
+      "Follow where it leads—it’s a compass, not a curse.",
+    ],
+    [
+      "I lead from the front—I won’t ask what I won’t do myself.",
+      "I delegate based on strength—I trust my people to do their jobs.",
+      "I work behind the scenes—guiding without being the focus.",
+      "I challenge the mission entirely—is this really the right move?",
+    ],
+    [
+      "I test it—knowledge is meant to be wielded.",
+      "I study it, but keep it secret—some truths are too unstable.",
+      "I destroy it—there are some paths that shouldn't be walked.",
+      "I bring it to others—we need to face it together.",
+    ],
+    [
+      "End them—this is justice.",
+      "Let them live, but never trust them again.",
+      "Seek understanding—what really caused the betrayal?",
+      "Walk away—this fight doesn’t define me anymore.",
+    ],
+  ];
 
   return (
-    <div className="p-6 space-y-8 max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold text-center mb-4">Path of the Saber</h1>
-      {QUESTIONS.map((q, qIndex) => (
-        <div key={q.id} className="border rounded-lg p-4 space-y-4 shadow">
-          <h2 className="text-xl font-semibold">Question {q.id}</h2>
-          <p>{q.prompt}</p>
+    <div className="max-w-3xl mx-auto py-10 px-4">
+      <h1 className="text-4xl font-bold mb-6">The Way of the Saber</h1>
+
+      <div className="mb-6">
+        <label className="block text-xl font-semibold mb-2">
+          What should we call you, Jedi?
+        </label>
+        <input
+          type="text"
+          value={jediName}
+          onChange={(e) => setJediName(e.target.value)}
+          placeholder="Enter your Jedi name"
+          className="w-full p-3 rounded-lg border bg-background text-foreground focus:outline-none focus:ring"
+        />
+      </div>
+
+      {questions.map((choices, questionIndex) => (
+        <div key={questionIndex} className="mb-6">
+          <h2 className="text-xl font-semibold mb-2">Question {questionIndex + 1}</h2>
           {[0, 1, 2].map((rank) => (
-            <div key={rank}>
-              <label className="block text-sm font-medium mb-1">
-                {rank + 1} – Rank #{rank + 1} choice
+            <div key={rank} className="mb-2">
+              <label className="block mb-1">
+                Rank {rank + 1}
               </label>
               <select
+                value={answers[questionIndex][rank]}
+                onChange={(e) =>
+                  handleRankChange(questionIndex, rank, e.target.value)
+                }
                 className="w-full p-2 rounded border"
-                value={responses[qIndex][rank]}
-                onChange={(e) => handleChange(qIndex, rank, e.target.value)}
               >
-                <option value="">Select an option</option>
-                {q.options.map((opt, i) => (
-                  <option key={i} value={opt} disabled={responses[qIndex].includes(opt)}>
-                    {opt}
+                <option value="">-- Select an option --</option>
+                {choices.map((choice, idx) => (
+                  <option key={idx} value={choice}>
+                    {choice}
                   </option>
                 ))}
               </select>
@@ -120,27 +122,20 @@ export default function JediQuiz() {
         </div>
       ))}
 
-      <div className="text-center">
-        <button
-          onClick={handleSubmit}
-          className="mt-6 px-6 py-3 text-lg font-semibold bg-black text-white rounded hover:bg-gray-800"
-        >
-          Reveal My Saber Path
-        </button>
-        {loading && (
-  <p className="text-center mt-4 text-lg font-medium text-yellow-500">
-    Reading the Flow… Forging your legacy...
-  </p>
-)}
+      <button
+        onClick={handleSubmit}
+        disabled={loading}
+        className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+      >
+        {loading ? "Revealing..." : "Reveal My Saber Path"}
+      </button>
 
-{result && (
-  <div className="mt-10 border p-6 rounded bg-black text-white space-y-4">
-    <h2 className="text-2xl font-bold text-center text-lime-400">Your Jedi Profile</h2>
-    <pre className="whitespace-pre-wrap text-lg">{result}</pre>
-  </div>
-)}
-
-      </div>
+      {result && (
+        <div className="mt-10 p-6 bg-gray-100 rounded-lg whitespace-pre-wrap">
+          <h2 className="text-2xl font-bold mb-4">Your Jedi Profile</h2>
+          <p>{result}</p>
+        </div>
+      )}
     </div>
   );
 }
