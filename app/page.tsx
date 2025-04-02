@@ -128,13 +128,13 @@ export default function HomePage() {
         </div>
       ))}
 
-      <button
-        onClick={handleSubmit}
-        disabled={loading}
-        className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
-      >
-        {loading ? "Revealing..." : "Reveal My Saber Path"}
-      </button>
+<button
+  onClick={handleSubmit}
+  disabled={loading}
+  className="mt-4 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+>
+  {loading ? "Revealing..." : "Reveal My Saber Path"}
+</button>
 
       {result && (
         <div className="mt-10 p-6 bg-gray-100 rounded-lg whitespace-pre-wrap">

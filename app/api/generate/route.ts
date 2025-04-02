@@ -10,27 +10,28 @@ export async function POST(req: NextRequest) {
     const { answers, name } = await req.json();
 
     const prompt = `
-Let’s dive into ${name || 'your'} Jedi profile based on their answers. Their style reflects a unique blend of strategic thought, emotional instinct, and combat intuition. This is a Jedi who doesn’t just walk through the Force — they move with purpose.
+Let’s dive into ${name || 'your'} Jedi profile based on their answers. Their style reflects a unique blend of emotion, instinct, and moral nuance. This Jedi doesn’t just walk through the Force — they flow with it, unpredictable but intentional.
 
 ${name || 'This Jedi'}’s Jedi Profile
 
-Based on their decisions:
-- Rank 1 choices: ${answers.map((q: string[]) => q[0]).join(', ')}
-- Rank 2 choices: ${answers.map((q: string[]) => q[1]).join(', ')}
-- Rank 3 choices: ${answers.map((q: string[]) => q[2]).join(', ')}
+Based on their ranked choices:
+- Rank 1: ${answers.map((q: string[]) => q[0]).join(', ')}
+- Rank 2: ${answers.map((q: string[]) => q[1]).join(', ')}
+- Rank 3: ${answers.map((q: string[]) => q[2]).join(', ')}
 
-Using this data, describe their:
-- Primary lightsaber form (with form name and title)
-- Secondary influence
-- Tertiary trait
-- Force alignment
-- Lightsaber color, hilt, and ignition sound
-- Armor or robes
-- A symbolic item they carry
-- A summary profile written with emotional flair and personality, as if it's a character intro from Star Wars.
+Using this, describe:
+- Primary lightsaber form (with poetic title and style summary)
+- Secondary form (emotional insight or strategic advantage)
+- Tertiary tendency (instincts under pressure)
+- Force alignment (emotional philosophy, Jedi/Sith/Gray/etc.)
+- Lightsaber color, hilt design, and ignition sound
+- Robes or armor and their symbolism
+- Symbolic item carried
+- Write it all in a stylized, emotionally rich way. Make it feel like a cinematic Star Wars character intro.
 
-Output everything as a creative character breakdown. No explanations. Just the final result.
+Do NOT explain anything outside the profile. Just give the final result, immersive and bold.
 `;
+
 
     const chat = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
