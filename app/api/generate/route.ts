@@ -15,9 +15,9 @@ Let’s dive into ${name || 'your'} Jedi profile based on their answers. Their s
 ${name || 'This Jedi'}’s Jedi Profile
 
 Based on their decisions:
-- Rank 1 choices: ${answers.map((q) => q[0]).join(', ')}
-- Rank 2 choices: ${answers.map((q) => q[1]).join(', ')}
-- Rank 3 choices: ${answers.map((q) => q[2]).join(', ')}
+- Rank 1 choices: ${answers.map((q: string[]) => q[0]).join(', ')}
+- Rank 2 choices: ${answers.map((q: string[]) => q[1]).join(', ')}
+- Rank 3 choices: ${answers.map((q: string[]) => q[2]).join(', ')}
 
 Using this data, describe their:
 - Primary lightsaber form (with form name and title)

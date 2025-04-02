@@ -111,11 +111,17 @@ export default function HomePage() {
                 className="w-full p-2 rounded border"
               >
                 <option value="">-- Select an option --</option>
-                {choices.map((choice, idx) => (
-                  <option key={idx} value={choice}>
-                    {choice}
-                  </option>
-                ))}
+                {choices
+                  .filter(
+                    (choice) =>
+                      !answers[questionIndex].includes(choice) ||
+                      answers[questionIndex][rank] === choice
+                  )
+                  .map((choice, idx) => (
+                    <option key={idx} value={choice}>
+                      {choice}
+                    </option>
+                  ))}
               </select>
             </div>
           ))}
