@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export default function HomePage() {
   const [answers, setAnswers] = useState<string[][]>(
-    Array(5).fill(["", "", ""])
+    Array.from({ length: 5 }, () => ["", "", ""])
   );
   const [jediName, setJediName] = useState("");
   const [result, setResult] = useState("");
