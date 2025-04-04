@@ -69,36 +69,51 @@ export default function HomePage() {
   };
 
   const questions = [
-    [
-      "Strike first—power and momentum win battles.",
-      "Observe, wait, and react with precision when the time is right.",
-      "Talk them down—violence is the last resort.",
-      "Distract them with wit or surprise, then exploit the opening.",
-    ],
-    [
-      "Channel it into strength—it’s fuel for my fire.",
-      "Acknowledge it but stay in control—emotion must serve me, not rule me.",
-      "Bury it and stay composed—it has no place in the moment.",
-      "Follow where it leads—it’s a compass, not a curse.",
-    ],
-    [
-      "I lead from the front—I won’t ask what I won’t do myself.",
-      "I delegate based on strength—I trust my people to do their jobs.",
-      "I work behind the scenes—guiding without being the focus.",
-      "I challenge the mission entirely—is this really the right move?",
-    ],
-    [
-      "I test it—knowledge is meant to be wielded.",
-      "I study it, but keep it secret—some truths are too unstable.",
-      "I destroy it—there are some paths that shouldn't be walked.",
-      "I bring it to others—we need to face it together.",
-    ],
-    [
-      "End them—this is justice.",
-      "Let them live, but never trust them again.",
-      "Seek understanding—what really caused the betrayal?",
-      "Walk away—this fight doesn’t define me anymore.",
-    ],
+    {
+      prompt: "In battle, what’s your first instinct?",
+      choices: [
+        "Strike first—power and momentum win battles.",
+        "Observe, wait, and react with precision when the time is right.",
+        "Talk them down—violence is the last resort.",
+        "Distract them with wit or surprise, then exploit the opening.",
+      ],
+    },
+    {
+      prompt: "How do you relate to emotion?",
+      choices: [
+        "Channel it into strength—it’s fuel for my fire.",
+        "Acknowledge it but stay in control—emotion must serve me, not rule me.",
+        "Bury it and stay composed—it has no place in the moment.",
+        "Follow where it leads—it’s a compass, not a curse.",
+      ],
+    },
+    {
+      prompt: "What kind of leader are you?",
+      choices: [
+        "I lead from the front—I won’t ask what I won’t do myself.",
+        "I delegate based on strength—I trust my people to do their jobs.",
+        "I work behind the scenes—guiding without being the focus.",
+        "I challenge the mission entirely—is this really the right move?",
+      ],
+    },
+    {
+      prompt: "You’ve uncovered forbidden knowledge. What now?",
+      choices: [
+        "I test it—knowledge is meant to be wielded.",
+        "I study it, but keep it secret—some truths are too unstable.",
+        "I destroy it—there are some paths that shouldn't be walked.",
+        "I bring it to others—we need to face it together.",
+      ],
+    },
+    {
+      prompt: "How do you respond to betrayal?",
+      choices: [
+        "End them—this is justice.",
+        "Let them live, but never trust them again.",
+        "Seek understanding—what really caused the betrayal?",
+        "Walk away—this fight doesn’t define me anymore.",
+      ],
+    },
   ];
 
   return (
@@ -123,9 +138,11 @@ export default function HomePage() {
         />
       </div>
 
-      {questions.map((choices, questionIndex) => (
+      {questions.map((question, questionIndex) => (
         <div key={questionIndex} className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">Question {questionIndex + 1}</h2>
+          <h2 className="text-xl font-semibold mb-2">
+            Question {questionIndex + 1}: {question.prompt}
+          </h2>
           {[0, 1, 2].map((rank) => (
             <div key={rank} className="mb-2">
               <label className="block mb-1">Rank {rank + 1}</label>
@@ -134,10 +151,10 @@ export default function HomePage() {
                 onChange={(e) =>
                   handleRankChange(questionIndex, rank, e.target.value)
                 }
-                className="w-full p-2 rounded border bg-white text-black"
+                className="w-full p-2 rounded border bg-white text-black dark:bg-gray-900 dark:text-white"
               >
                 <option value="">-- Select an option --</option>
-                {choices.map((choice, idx) => {
+                {question.choices.map((choice, idx) => {
                   const isSelected =
                     answers[questionIndex].includes(choice) &&
                     answers[questionIndex][rank] !== choice;
@@ -146,7 +163,7 @@ export default function HomePage() {
                       key={idx}
                       value={choice}
                       disabled={isSelected}
-                      style={{ color: isSelected ? "gray" : "inherit" }}
+                      className={isSelected ? "text-gray-400" : "text-black dark:text-white"}
                     >
                       {choice}
                     </option>
