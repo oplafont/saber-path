@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function HomePage() {
   const [answers, setAnswers] = useState<string[][]>(
@@ -9,6 +9,19 @@ export default function HomePage() {
   const [jediName, setJediName] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showResult, setShowResult] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    audioRef.current = new Audio("/saber-click.mp3");
+  }, []);
+
+  const playSound = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+      audioRef.current.play();
+    }
+  };
 
   const handleRankChange = (
     questionIndex: number,
@@ -18,11 +31,13 @@ export default function HomePage() {
     const newAnswers = [...answers];
     newAnswers[questionIndex][rankIndex] = value;
     setAnswers(newAnswers);
+    playSound();
   };
 
   const handleSubmit = async () => {
     setLoading(true);
     setResult("");
+    setShowResult(false);
     try {
       const response = await fetch("/api/generate", {
         method: "POST",
@@ -35,6 +50,7 @@ export default function HomePage() {
       const data = await response.json();
       if (response.ok) {
         setResult(data.result);
+        setTimeout(() => setShowResult(true), 300);
       } else {
         setResult("Failed to generate Jedi profile. Try again later.");
       }
@@ -43,6 +59,13 @@ export default function HomePage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleReset = () => {
+    setAnswers(Array.from({ length: 5 }, () => ["", "", ""]));
+    setJediName("");
+    setResult("");
+    setShowResult(false);
   };
 
   const questions = [
@@ -79,8 +102,13 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="max-w-3xl mx-auto py-10 px-4">
-      <h1 className="text-4xl font-bold mb-6">The Way of the Saber</h1>
+    <div
+      className="min-h-screen bg-cover bg-center text-white px-4 py-10"
+      style={{ backgroundImage: "url('/starwars-bg.jpg')" }}
+    >
+      <h1 className="text-5xl font-[Orbitron] font-extrabold mb-6 text-center text-yellow-400 drop-shadow-[0_0_15px_rgba(255,255,100,0.8)]">
+        The Way of the Saber
+      </h1>
 
       <div className="mb-6">
         <label className="block text-xl font-semibold mb-2">
@@ -100,48 +128,73 @@ export default function HomePage() {
           <h2 className="text-xl font-semibold mb-2">Question {questionIndex + 1}</h2>
           {[0, 1, 2].map((rank) => (
             <div key={rank} className="mb-2">
-              <label className="block mb-1">
-                Rank {rank + 1}
-              </label>
+              <label className="block mb-1">Rank {rank + 1}</label>
               <select
                 value={answers[questionIndex][rank]}
                 onChange={(e) =>
                   handleRankChange(questionIndex, rank, e.target.value)
                 }
-                className="w-full p-2 rounded border"
+                className="w-full p-2 rounded border bg-white text-black"
               >
                 <option value="">-- Select an option --</option>
-                {choices
-                  .filter(
-                    (choice) =>
-                      !answers[questionIndex].includes(choice) ||
-                      answers[questionIndex][rank] === choice
-                  )
-                  .map((choice, idx) => (
-                    <option key={idx} value={choice}>
+                {choices.map((choice, idx) => {
+                  const isSelected =
+                    answers[questionIndex].includes(choice) &&
+                    answers[questionIndex][rank] !== choice;
+                  return (
+                    <option
+                      key={idx}
+                      value={choice}
+                      disabled={isSelected}
+                      style={{ color: isSelected ? "gray" : "inherit" }}
+                    >
                       {choice}
                     </option>
-                  ))}
+                  );
+                })}
               </select>
             </div>
           ))}
         </div>
       ))}
 
-<button
-  onClick={handleSubmit}
-  disabled={loading}
-  className="mt-4 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
->
-  {loading ? "Revealing..." : "Reveal My Saber Path"}
-</button>
+      <div className="flex flex-wrap gap-4">
+        <button
+          onClick={handleSubmit}
+          disabled={loading}
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition shadow-lg"
+        >
+          {loading ? "Revealing..." : "Reveal My Saber Path"}
+        </button>
+
+        <button
+          onClick={handleReset}
+          className="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition shadow-lg"
+        >
+          Reset Quiz
+        </button>
+      </div>
 
       {result && (
-        <div className="mt-10 p-6 bg-gray-100 rounded-lg whitespace-pre-wrap">
-          <h2 className="text-2xl font-bold mb-4">Your Jedi Profile</h2>
-          <p>{result}</p>
+        <div className="mt-10 p-6 bg-black/70 rounded-lg shadow-xl">
+          <h2 className="text-2xl font-bold mb-4 text-yellow-300 font-[Orbitron]">
+            Your Jedi Profile
+          </h2>
+          <pre
+            className={`whitespace-pre-wrap font-mono text-lg ${showResult ? "animate-typewriter" : ""}`}
+            style={{
+              overflow: "hidden",
+              maxHeight: showResult ? "1000px" : "0",
+              transition: "max-height 1s ease-in-out",
+            }}
+          >
+            {result}
+          </pre>
         </div>
       )}
+
+      {/* Hidden audio for sound fx */}
+      <audio ref={audioRef} src="/saber-click.mp3" preload="auto" />
     </div>
   );
 }
