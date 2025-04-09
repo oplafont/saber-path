@@ -109,7 +109,7 @@ export default function HomePage() {
         <meta name="description" content="Discover your Jedi combat form and Force alignment through an immersive Star Wars-style quiz." />
         <meta property="og:title" content="The Way of the Saber" />
         <meta property="og:description" content="Discover your Jedi combat form and Force alignment through an immersive Star Wars-style quiz." />
-        <meta property="og:image" content="/starwars-preview.jpg" />
+        <meta property="og:image" content="/A_promotional_digital_illustration_poster_titled_.png" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
