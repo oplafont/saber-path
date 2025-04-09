@@ -10,33 +10,42 @@ export async function POST(req: NextRequest) {
     const { answers, name } = await req.json();
 
     const prompt = `
-You are a wise Jedi historian and galactic archivist. Based on the user's ranked answers, you will generate a full Star Wars-style Jedi profile with vivid storytelling and immersive flair.
+Create a stylized Jedi profile based on the following ranked decisions.
 
-Details provided:
-- Jedi name: ${name || 'Unnamed Padawan'}
-- Rank 1 choices: ${answers.map((q: string[]) => q[0]).join(', ')}
-- Rank 2 choices: ${answers.map((q: string[]) => q[1]).join(', ')}
-- Rank 3 choices: ${answers.map((q: string[]) => q[2]).join(', ')}
+Name: ${name || 'This Jedi'}
 
-Now, generate their Jedi profile including:
+Rank 1 choices: ${answers.map((q: string[]) => q[0]).join(', ')}
+Rank 2 choices: ${answers.map((q: string[]) => q[1]).join(', ')}
+Rank 3 choices: ${answers.map((q: string[]) => q[2]).join(', ')}
 
-1. **Jedi Name and Title** (e.g., Master Kael Varn, The Relentless Sentinel)
-2. **Primary Lightsaber Form** (e.g., Form III – Soresu: The Way of the Mynock) — explain its combat style and how it defines them.
-3. **Secondary Influence Form** — describe how another form supports their personality or fighting under pressure.
-4. **Tertiary Trait** — what emerges when instincts take over.
-5. **Force Alignment** — Light Side, Gray Jedi, Dark Side, etc. Add emotional/philosophical reasoning.
-6. **Lightsaber** — Color (canon: blue, green, purple, yellow, red, white), hilt appearance, and ignition sound.
-7. **Robes or Armor** — Describe appearance and symbolism.
-8. **Symbolic Item** — Something they carry that reflects who they are.
-9. **Similar Jedi or Sith** — 1–2 known characters they resemble in spirit or fighting style.
-10. **Full cinematic intro paragraph** — Write like the narrator of a Star Wars movie, dramatic and poetic, as if this Jedi is entering the story.
+Instructions:
+- Identify this Jedi’s PRIMARY lightsaber form (choose from canonical Forms I-VII, e.g. Form V: Djem So – The Way of the Krayt Dragon)
+- Identify a SECONDARY influence (another form or combat approach that compliments the first)
+- Identify a TERTIARY instinct that shows under stress or pressure
+- Assign a Force Alignment (e.g. Light Side, Gray Jedi, Fallen Jedi, etc.)
+- Describe:
+  • Lightsaber color and what it symbolizes
+  • Hilt design and how it fits their personality
+  • Ignition sound description
+  • Robe or armor design and its symbolism
+  • A symbolic item they carry
+  • Which famous Jedi or Sith they are spiritually or philosophically similar to (e.g. Ahsoka, Qui-Gon, Revan, Kylo Ren, etc.)
 
-Do not mention score or quiz mechanics. Format clearly. Make it feel like an official Star Wars databank entry.
+Tone:
+- Write in a **cinematic**, immersive, in-universe Star Wars tone
+- Use metaphor and poetic flair
+- Avoid explanations or developer notes — just output the final profile
+
+Only return the fully written Jedi profile.
 `;
 
     const chat = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
+      model: 'gpt-4',
       messages: [
+        {
+          role: 'system',
+          content: 'You are a Jedi archivist writing immersive, emotionally rich character profiles for Force users.',
+        },
         {
           role: 'user',
           content: prompt,
