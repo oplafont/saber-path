@@ -10,35 +10,35 @@ export async function POST(req: NextRequest) {
     const { answers, name } = await req.json();
 
     const prompt = `
-Let’s dive into ${name || 'your'} Jedi profile based on their answers. Their style reflects a unique blend of emotion, instinct, and moral nuance. This Jedi doesn’t just walk through the Force — they flow with it, unpredictable but intentional.
+Create a complete and consistent Jedi profile using canonical Star Wars terms and structure. The name provided is: ${name || 'Unnamed Jedi'}.
 
-${name || 'This Jedi'}’s Jedi Profile
-
-Based on their ranked choices:
+Based on the following ranked choices:
 - Rank 1: ${answers.map((q: string[]) => q[0]).join(', ')}
 - Rank 2: ${answers.map((q: string[]) => q[1]).join(', ')}
 - Rank 3: ${answers.map((q: string[]) => q[2]).join(', ')}
 
-Using this, describe:
-- Primary lightsaber form (with poetic title and style summary)
-- Secondary form (emotional insight or strategic advantage)
-- Tertiary tendency (instincts under pressure)
-- Force alignment (emotional philosophy, Jedi/Sith/Gray/etc.)
-- Lightsaber color, hilt design, and ignition sound
-- Robes or armor and their symbolism
-- Symbolic item carried
-- Write it all in a stylized, emotionally rich way. Make it feel like a cinematic Star Wars character intro.
+Use this information to create a stylized and lore-accurate Jedi profile that includes:
 
-Do NOT explain anything outside the profile. Just give the final result, immersive and bold.
+1. Full Jedi Name and Title
+2. Primary Lightsaber Form (e.g., "Form IV: Ataru – The Way of the Hawk-Bat") and what it says about their combat style
+3. Secondary Form Influence with combat and personality relevance
+4. Tertiary Form Trait used under pressure or in unique circumstances
+5. Force Alignment (e.g., Jedi Consular, Sith Warrior, Gray Jedi, etc.)
+6. Lightsaber Color and what it symbolizes
+7. Lightsaber Hilt Design (material, shape, customizations)
+8. Robes/Armor Appearance (colors, condition, style, any personal touches)
+9. Symbolic Item carried by the Jedi and its significance
+10. A dramatic, emotionally rich backstory and summary styled like a Star Wars cinematic introduction.
+
+Stick strictly to Star Wars naming and lore tone. No generic summaries or disclaimers. This is an immersive in-universe character reveal.
 `;
-
 
     const chat = await openai.chat.completions.create({
       model: 'gpt-3.5-turbo',
       messages: [
         {
           role: 'system',
-          content: 'You are a wise Jedi historian and storyteller.',
+          content: 'You are a wise Jedi historian and storyteller within the Star Wars universe.',
         },
         {
           role: 'user',
