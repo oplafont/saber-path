@@ -1,20 +1,20 @@
 'use client';
 
-import { useState, useEffect, useRef } from "react";
-import Head from "next/head";
+import { useState, useEffect, useRef } from 'react';
+import Head from 'next/head';
 
 export default function HomePage() {
   const [answers, setAnswers] = useState<string[][]>(
-    Array.from({ length: 5 }, () => ["", "", ""])
+    Array.from({ length: 5 }, () => ['', '', ''])
   );
-  const [jediName, setJediName] = useState("");
-  const [result, setResult] = useState("");
+  const [jediName, setJediName] = useState('');
+  const [result, setResult] = useState('');
   const [loading, setLoading] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    audioRef.current = new Audio("/saber-click.mp3");
+    audioRef.current = new Audio('/saber-click.mp3');
   }, []);
 
   const playSound = () => {
@@ -37,13 +37,14 @@ export default function HomePage() {
 
   const handleSubmit = async () => {
     setLoading(true);
-    setResult("");
+    setResult('');
     setShowResult(false);
+
     try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
+      const response = await fetch('/api/generate', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ answers, name: jediName }),
       });
@@ -53,70 +54,83 @@ export default function HomePage() {
         setResult(data.result);
         setTimeout(() => setShowResult(true), 300);
       } else {
-        setResult("Failed to generate Jedi profile. Try again later.");
+        setResult('Failed to generate Jedi profile. Try again later.');
       }
     } catch (error) {
-      setResult("An error occurred. Try again later.");
+      setResult('An error occurred. Try again later.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleReset = () => {
-    setAnswers(Array.from({ length: 5 }, () => ["", "", ""]));
-    setJediName("");
-    setResult("");
+    setAnswers(Array.from({ length: 5 }, () => ['', '', '']));
+    setJediName('');
+    setResult('');
     setShowResult(false);
   };
 
-  const questionPrompts = [
-    "How do you engage in conflict?",
-    "How do you handle strong emotions?",
-    "What kind of leader are you?",
-    "You discover forbidden Force knowledge. What do you do?",
-    "How do you respond to betrayal?",
-  ];
-
   const questions = [
-    [
-      "Strike first—power and momentum win battles.",
-      "Observe, wait, and react with precision when the time is right.",
-      "Talk them down—violence is the last resort.",
-      "Distract them with wit or surprise, then exploit the opening.",
-    ],
-    [
-      "Channel it into strength—it’s fuel for my fire.",
-      "Acknowledge it but stay in control—emotion must serve me, not rule me.",
-      "Bury it and stay composed—it has no place in the moment.",
-      "Follow where it leads—it’s a compass, not a curse.",
-    ],
-    [
-      "I lead from the front—I won’t ask what I won’t do myself.",
-      "I delegate based on strength—I trust my people to do their jobs.",
-      "I work behind the scenes—guiding without being the focus.",
-      "I challenge the mission entirely—is this really the right move?",
-    ],
-    [
-      "I test it—knowledge is meant to be wielded.",
-      "I study it, but keep it secret—some truths are too unstable.",
-      "I destroy it—there are some paths that shouldn't be walked.",
-      "I bring it to others—we need to face it together.",
-    ],
-    [
-      "End them—this is justice.",
-      "Let them live, but never trust them again.",
-      "Seek understanding—what really caused the betrayal?",
-      "Walk away—this fight doesn’t define me anymore.",
-    ],
+    {
+      title: 'How do you approach conflict?',
+      options: [
+        'Strike first—power and momentum win battles.',
+        'Observe, wait, and react with precision when the time is right.',
+        'Talk them down—violence is the last resort.',
+        'Distract them with wit or surprise, then exploit the opening.',
+      ],
+    },
+    {
+      title: 'How do you handle emotion in combat?',
+      options: [
+        'Channel it into strength—it’s fuel for my fire.',
+        'Acknowledge it but stay in control—emotion must serve me, not rule me.',
+        'Bury it and stay composed—it has no place in the moment.',
+        'Follow where it leads—it’s a compass, not a curse.',
+      ],
+    },
+    {
+      title: 'What role do you take in a team?',
+      options: [
+        'I lead from the front—I won’t ask what I won’t do myself.',
+        'I delegate based on strength—I trust my people to do their jobs.',
+        'I work behind the scenes—guiding without being the focus.',
+        'I challenge the mission entirely—is this really the right move?',
+      ],
+    },
+    {
+      title: 'You find forbidden knowledge. What do you do?',
+      options: [
+        'I test it—knowledge is meant to be wielded.',
+        'I study it, but keep it secret—some truths are too unstable.',
+        'I destroy it—there are some paths that shouldn’t be walked.',
+        'I bring it to others—we need to face it together.',
+      ],
+    },
+    {
+      title: 'Someone close betrays you. What’s your response?',
+      options: [
+        'End them—this is justice.',
+        'Let them live, but never trust them again.',
+        'Seek understanding—what really caused the betrayal?',
+        'Walk away—this fight doesn’t define me anymore.',
+      ],
+    },
   ];
 
   return (
     <>
       <Head>
         <title>The Way of the Saber</title>
-        <meta name="description" content="Discover your Jedi combat form and Force alignment through an immersive Star Wars-style quiz." />
+        <meta
+          name="description"
+          content="Discover your Jedi combat form and Force alignment through an immersive Star Wars-style quiz."
+        />
         <meta property="og:title" content="The Way of the Saber" />
-        <meta property="og:description" content="Discover your Jedi combat form and Force alignment through an immersive Star Wars-style quiz." />
+        <meta
+          property="og:description"
+          content="Discover your Jedi combat form and Force alignment through an immersive Star Wars-style quiz."
+        />
         <meta property="og:image" content="/starwars-preview.jpg" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -142,10 +156,10 @@ export default function HomePage() {
           />
         </div>
 
-        {questions.map((choices, questionIndex) => (
+        {questions.map((question, questionIndex) => (
           <div key={questionIndex} className="mb-6">
-            <h2 className="text-2xl font-bold mb-2 text-yellow-300 font-[Orbitron]">
-              {questionPrompts[questionIndex]}
+            <h2 className="text-xl font-semibold mb-2">
+              {question.title}
             </h2>
             {[0, 1, 2].map((rank) => (
               <div key={rank} className="mb-2">
@@ -158,7 +172,7 @@ export default function HomePage() {
                   className="w-full p-2 rounded border bg-white text-black"
                 >
                   <option value="">-- Select an option --</option>
-                  {choices.map((choice, idx) => {
+                  {question.options.map((choice, idx) => {
                     const isSelected =
                       answers[questionIndex].includes(choice) &&
                       answers[questionIndex][rank] !== choice;
@@ -167,7 +181,7 @@ export default function HomePage() {
                         key={idx}
                         value={choice}
                         disabled={isSelected}
-                        style={{ color: isSelected ? "gray" : "inherit" }}
+                        style={{ color: isSelected ? 'gray' : 'inherit' }}
                       >
                         {choice}
                       </option>
@@ -185,7 +199,7 @@ export default function HomePage() {
             disabled={loading}
             className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition shadow-lg"
           >
-            {loading ? "Revealing..." : "Reveal My Saber Path"}
+            {loading ? 'Revealing...' : 'Reveal My Saber Path'}
           </button>
 
           <button
@@ -202,11 +216,13 @@ export default function HomePage() {
               Your Jedi Profile
             </h2>
             <pre
-              className={`whitespace-pre-wrap font-mono text-lg ${showResult ? "animate-typewriter" : ""}`}
+              className={`whitespace-pre-wrap font-mono text-lg ${
+                showResult ? 'animate-typewriter' : ''
+              }`}
               style={{
-                overflow: "hidden",
-                maxHeight: showResult ? "1000px" : "0",
-                transition: "max-height 1s ease-in-out",
+                overflow: 'hidden',
+                maxHeight: showResult ? '1000px' : '0',
+                transition: 'max-height 1s ease-in-out',
               }}
             >
               {result}
@@ -214,6 +230,7 @@ export default function HomePage() {
           </div>
         )}
 
+        {/* Hidden audio for sound fx */}
         <audio ref={audioRef} src="/saber-click.mp3" preload="auto" />
       </div>
     </>
