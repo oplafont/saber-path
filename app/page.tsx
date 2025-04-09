@@ -109,20 +109,20 @@ export default function HomePage() {
         <meta name="description" content="Discover your Jedi combat form and Force alignment through an immersive Star Wars-style quiz." />
         <meta property="og:title" content="The Way of the Saber" />
         <meta property="og:description" content="Discover your Jedi combat form and Force alignment through an immersive Star Wars-style quiz." />
-        <meta property="og:image" content="/A_promotional_digital_illustration_poster_titled_.png" />
+        <meta property="og:image" content="/poster.jpg" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <div
-        className="min-h-screen bg-cover bg-center text-white px-4 py-10"
+        className="min-h-screen bg-cover bg-center text-white px-4 py-10 sm:px-6 md:px-8 lg:px-16"
         style={{ backgroundImage: "url('/starwars-bg.jpg')" }}
       >
-        <h1 className="text-5xl font-[Orbitron] font-extrabold mb-6 text-center text-yellow-400 drop-shadow-[0_0_15px_rgba(255,255,100,0.8)]">
+        <h1 className="text-4xl sm:text-5xl font-[Orbitron] font-extrabold mb-6 text-center text-yellow-400 drop-shadow-[0_0_15px_rgba(255,255,100,0.8)]">
           The Way of the Saber
         </h1>
 
         <div className="mb-6">
-          <label className="block text-xl font-semibold mb-2">
+          <label className="block text-lg sm:text-xl font-semibold mb-2">
             What should we call you, Jedi?
           </label>
           <input
@@ -136,7 +136,7 @@ export default function HomePage() {
 
         {questions.map((choices, questionIndex) => (
           <div key={questionIndex} className="mb-6">
-            <h2 className="text-xl font-semibold mb-2">Question {questionIndex + 1}</h2>
+            <h2 className="text-lg sm:text-xl font-semibold mb-2">Question {questionIndex + 1}</h2>
             {[0, 1, 2].map((rank) => (
               <div key={rank} className="mb-2">
                 <label className="block mb-1">Rank {rank + 1}</label>
@@ -169,7 +169,7 @@ export default function HomePage() {
           </div>
         ))}
 
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-4 justify-center">
           <button
             onClick={handleSubmit}
             disabled={loading}
@@ -192,7 +192,7 @@ export default function HomePage() {
               Your Jedi Profile
             </h2>
             <pre
-              className={`whitespace-pre-wrap font-mono text-lg ${showResult ? "animate-typewriter" : ""}`}
+              className={`whitespace-pre-wrap font-mono text-base sm:text-lg ${showResult ? "animate-typewriter" : ""}`}
               style={{
                 overflow: "hidden",
                 maxHeight: showResult ? "1000px" : "0",
