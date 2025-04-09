@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from "react";
+import Head from "next/head";
 
 export default function HomePage() {
   const [answers, setAnswers] = useState<string[][]>(
@@ -69,149 +70,143 @@ export default function HomePage() {
   };
 
   const questions = [
-    {
-      prompt: "In battle, what’s your first instinct?",
-      choices: [
-        "Strike first—power and momentum win battles.",
-        "Observe, wait, and react with precision when the time is right.",
-        "Talk them down—violence is the last resort.",
-        "Distract them with wit or surprise, then exploit the opening.",
-      ],
-    },
-    {
-      prompt: "How do you relate to emotion?",
-      choices: [
-        "Channel it into strength—it’s fuel for my fire.",
-        "Acknowledge it but stay in control—emotion must serve me, not rule me.",
-        "Bury it and stay composed—it has no place in the moment.",
-        "Follow where it leads—it’s a compass, not a curse.",
-      ],
-    },
-    {
-      prompt: "What kind of leader are you?",
-      choices: [
-        "I lead from the front—I won’t ask what I won’t do myself.",
-        "I delegate based on strength—I trust my people to do their jobs.",
-        "I work behind the scenes—guiding without being the focus.",
-        "I challenge the mission entirely—is this really the right move?",
-      ],
-    },
-    {
-      prompt: "You’ve uncovered forbidden knowledge. What now?",
-      choices: [
-        "I test it—knowledge is meant to be wielded.",
-        "I study it, but keep it secret—some truths are too unstable.",
-        "I destroy it—there are some paths that shouldn't be walked.",
-        "I bring it to others—we need to face it together.",
-      ],
-    },
-    {
-      prompt: "How do you respond to betrayal?",
-      choices: [
-        "End them—this is justice.",
-        "Let them live, but never trust them again.",
-        "Seek understanding—what really caused the betrayal?",
-        "Walk away—this fight doesn’t define me anymore.",
-      ],
-    },
+    [
+      "Strike first—power and momentum win battles.",
+      "Observe, wait, and react with precision when the time is right.",
+      "Talk them down—violence is the last resort.",
+      "Distract them with wit or surprise, then exploit the opening.",
+    ],
+    [
+      "Channel it into strength—it’s fuel for my fire.",
+      "Acknowledge it but stay in control—emotion must serve me, not rule me.",
+      "Bury it and stay composed—it has no place in the moment.",
+      "Follow where it leads—it’s a compass, not a curse.",
+    ],
+    [
+      "I lead from the front—I won’t ask what I won’t do myself.",
+      "I delegate based on strength—I trust my people to do their jobs.",
+      "I work behind the scenes—guiding without being the focus.",
+      "I challenge the mission entirely—is this really the right move?",
+    ],
+    [
+      "I test it—knowledge is meant to be wielded.",
+      "I study it, but keep it secret—some truths are too unstable.",
+      "I destroy it—there are some paths that shouldn't be walked.",
+      "I bring it to others—we need to face it together.",
+    ],
+    [
+      "End them—this is justice.",
+      "Let them live, but never trust them again.",
+      "Seek understanding—what really caused the betrayal?",
+      "Walk away—this fight doesn’t define me anymore.",
+    ],
   ];
 
   return (
-    <div
-      className="min-h-screen bg-cover bg-center text-white px-4 py-10"
-      style={{ backgroundImage: "url('/starwars-bg.jpg')" }}
-    >
-      <h1 className="text-5xl font-[Orbitron] font-extrabold mb-6 text-center text-yellow-400 drop-shadow-[0_0_15px_rgba(255,255,100,0.8)]">
-        The Way of the Saber
-      </h1>
+    <>
+      <Head>
+        <title>The Way of the Saber</title>
+        <meta name="description" content="Discover your Jedi combat form and Force alignment through an immersive Star Wars-style quiz." />
+        <meta property="og:title" content="The Way of the Saber" />
+        <meta property="og:description" content="Discover your Jedi combat form and Force alignment through an immersive Star Wars-style quiz." />
+        <meta property="og:image" content="/starwars-preview.jpg" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-      <div className="mb-6">
-        <label className="block text-xl font-semibold mb-2">
-          What should we call you, Jedi?
-        </label>
-        <input
-          type="text"
-          value={jediName}
-          onChange={(e) => setJediName(e.target.value)}
-          placeholder="Enter your Jedi name"
-          className="w-full p-3 rounded-lg border bg-background text-foreground focus:outline-none focus:ring"
-        />
-      </div>
+      <div
+        className="min-h-screen bg-cover bg-center text-white px-4 py-10"
+        style={{ backgroundImage: "url('/starwars-bg.jpg')" }}
+      >
+        <h1 className="text-5xl font-[Orbitron] font-extrabold mb-6 text-center text-yellow-400 drop-shadow-[0_0_15px_rgba(255,255,100,0.8)]">
+          The Way of the Saber
+        </h1>
 
-      {questions.map((question, questionIndex) => (
-        <div key={questionIndex} className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">
-            Question {questionIndex + 1}: {question.prompt}
-          </h2>
-          {[0, 1, 2].map((rank) => (
-            <div key={rank} className="mb-2">
-              <label className="block mb-1">Rank {rank + 1}</label>
-              <select
-                value={answers[questionIndex][rank]}
-                onChange={(e) =>
-                  handleRankChange(questionIndex, rank, e.target.value)
-                }
-                className="w-full p-2 rounded border bg-white text-black dark:bg-gray-900 dark:text-white"
-              >
-                <option value="">-- Select an option --</option>
-                {question.choices.map((choice, idx) => {
-                  const isSelected =
-                    answers[questionIndex].includes(choice) &&
-                    answers[questionIndex][rank] !== choice;
-                  return (
-                    <option
-                      key={idx}
-                      value={choice}
-                      disabled={isSelected}
-                      className={isSelected ? "text-gray-400" : "text-black dark:text-white"}
-                    >
-                      {choice}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-          ))}
+        <div className="mb-6">
+          <label className="block text-xl font-semibold mb-2">
+            What should we call you, Jedi?
+          </label>
+          <input
+            type="text"
+            value={jediName}
+            onChange={(e) => setJediName(e.target.value)}
+            placeholder="Enter your Jedi name"
+            className="w-full p-3 rounded-lg border bg-background text-foreground focus:outline-none focus:ring"
+          />
         </div>
-      ))}
 
-      <div className="flex flex-wrap gap-4">
-        <button
-          onClick={handleSubmit}
-          disabled={loading}
-          className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition shadow-lg"
-        >
-          {loading ? "Revealing..." : "Reveal My Saber Path"}
-        </button>
+        {questions.map((choices, questionIndex) => (
+          <div key={questionIndex} className="mb-6">
+            <h2 className="text-xl font-semibold mb-2">Question {questionIndex + 1}</h2>
+            {[0, 1, 2].map((rank) => (
+              <div key={rank} className="mb-2">
+                <label className="block mb-1">Rank {rank + 1}</label>
+                <select
+                  value={answers[questionIndex][rank]}
+                  onChange={(e) =>
+                    handleRankChange(questionIndex, rank, e.target.value)
+                  }
+                  className="w-full p-2 rounded border bg-white text-black"
+                >
+                  <option value="">-- Select an option --</option>
+                  {choices.map((choice, idx) => {
+                    const isSelected =
+                      answers[questionIndex].includes(choice) &&
+                      answers[questionIndex][rank] !== choice;
+                    return (
+                      <option
+                        key={idx}
+                        value={choice}
+                        disabled={isSelected}
+                        style={{ color: isSelected ? "gray" : "inherit" }}
+                      >
+                        {choice}
+                      </option>
+                    );
+                  })}
+                </select>
+              </div>
+            ))}
+          </div>
+        ))}
 
-        <button
-          onClick={handleReset}
-          className="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition shadow-lg"
-        >
-          Reset Quiz
-        </button>
-      </div>
-
-      {result && (
-        <div className="mt-10 p-6 bg-black/70 rounded-lg shadow-xl">
-          <h2 className="text-2xl font-bold mb-4 text-yellow-300 font-[Orbitron]">
-            Your Jedi Profile
-          </h2>
-          <pre
-            className={`whitespace-pre-wrap font-mono text-lg ${showResult ? "animate-typewriter" : ""}`}
-            style={{
-              overflow: "hidden",
-              maxHeight: showResult ? "1000px" : "0",
-              transition: "max-height 1s ease-in-out",
-            }}
+        <div className="flex flex-wrap gap-4">
+          <button
+            onClick={handleSubmit}
+            disabled={loading}
+            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition shadow-lg"
           >
-            {result}
-          </pre>
-        </div>
-      )}
+            {loading ? "Revealing..." : "Reveal My Saber Path"}
+          </button>
 
-      {/* Hidden audio for sound fx */}
-      <audio ref={audioRef} src="/saber-click.mp3" preload="auto" />
-    </div>
+          <button
+            onClick={handleReset}
+            className="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition shadow-lg"
+          >
+            Reset Quiz
+          </button>
+        </div>
+
+        {result && (
+          <div className="mt-10 p-6 bg-black/70 rounded-lg shadow-xl">
+            <h2 className="text-2xl font-bold mb-4 text-yellow-300 font-[Orbitron]">
+              Your Jedi Profile
+            </h2>
+            <pre
+              className={`whitespace-pre-wrap font-mono text-lg ${showResult ? "animate-typewriter" : ""}`}
+              style={{
+                overflow: "hidden",
+                maxHeight: showResult ? "1000px" : "0",
+                transition: "max-height 1s ease-in-out",
+              }}
+            >
+              {result}
+            </pre>
+          </div>
+        )}
+
+        {/* Hidden audio for sound fx */}
+        <audio ref={audioRef} src="/saber-click.mp3" preload="auto" />
+      </div>
+    </>
   );
 }
