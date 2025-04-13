@@ -12,6 +12,8 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [hasPaid, setHasPaid] = useState(false);
+  const [showFullProfile, setShowFullProfile] = useState(false);
 
   useEffect(() => {
     audioRef.current = new Audio('/saber-click.mp3');
@@ -211,22 +213,38 @@ export default function HomePage() {
         </div>
 
         {result && (
-          <div className="mt-10 p-6 bg-black/70 rounded-lg shadow-xl">
+          <div className="mt-10 p-6 bg-black/70 rounded-lg shadow-xl text-center">
             <h2 className="text-2xl font-bold mb-4 text-yellow-300 font-[Orbitron]">
               Your Jedi Profile
             </h2>
-            <pre
-              className={`whitespace-pre-wrap font-mono text-lg ${
-                showResult ? 'animate-typewriter' : ''
-              }`}
-              style={{
-                overflow: 'hidden',
-                maxHeight: showResult ? '1000px' : '0',
-                transition: 'max-height 1s ease-in-out',
-              }}
-            >
-              {result}
-            </pre>
+
+            {!showFullProfile ? (
+              <>
+                <pre className="whitespace-pre-wrap font-mono text-lg mb-4 text-white">
+                  {result.slice(0, 350)}...
+                </pre>
+                <p className="mb-4 text-md font-medium text-white">
+                  Unlock your full Jedi destiny for only <span className="text-yellow-300 font-bold">$2.97</span>
+                </p>
+                <button
+                  onClick={() => setShowFullProfile(true)}
+                  className="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-6 py-2 rounded-lg transition"
+                >
+                  Pay to Reveal
+                </button>
+              </>
+            ) : (
+              <pre
+                className={`whitespace-pre-wrap font-mono text-lg ${showResult ? "animate-typewriter" : ""}`}
+                style={{
+                  overflow: "hidden",
+                  maxHeight: showResult ? "1000px" : "0",
+                  transition: "max-height 1s ease-in-out",
+                }}
+              >
+                {result}
+              </pre>
+            )}
           </div>
         )}
 
