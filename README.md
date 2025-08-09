@@ -34,3 +34,17 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+## Environment Variables
+
+To enable the AI-driven Jedi profile generation, Stripe-powered paywall, and PDF certificate downloads, you need to define a few environment variables. Create a `.env.local` file in the project root and add the following lines:
+
+```
+OPENAI_API_KEY=your-openai-api-key
+STRIPE_SECRET_KEY=your-stripe-secret-key
+STRIPE_PRICE_ID=price_XXXXXXXXXXXXXXXX
+DOMAIN=http://localhost:3000
+```
+
+When deploying on Vercel, configure these variables in your project settings with your actual keys and domain.
