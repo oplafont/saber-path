@@ -1,3 +1,5 @@
+// Specify Node.js runtime for pdf-lib compatibility
+export const runtime = 'nodejs';
 import { NextRequest, NextResponse } from 'next/server';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 
