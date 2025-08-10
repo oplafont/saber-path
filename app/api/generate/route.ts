@@ -1,3 +1,5 @@
+// Specify Node.js runtime for OpenAI compatibility
+export const runtime = 'nodejs';
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
